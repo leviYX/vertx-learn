@@ -6,6 +6,9 @@ import io.vertx.core.Vertx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 发布订阅消息模式
+ */
 public class PubAndSubExamle {
 
 

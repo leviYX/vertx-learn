@@ -21,6 +21,7 @@ public class MainVerticle extends AbstractVerticle {
     vertx.deployVerticle(new MainVerticle());
 
     vertx.deployVerticle(VerticleN.class.getName(),
+      // 设置部署信息，比如实例数、配置信息等
       new DeploymentOptions()
         .setInstances(Runtime.getRuntime().availableProcessors())
         .setConfig(
@@ -35,6 +36,9 @@ public class MainVerticle extends AbstractVerticle {
   @Override
   public void start(Promise<Void> startPromise) {
     logger.info("启动main verticle...");
+    // 获取部署的时候setConfig的配置信息
+    var config = config();
+    System.out.println(config.toString());
     vertx.deployVerticle(new VerticleA(),deploy -> {
       if(deploy.succeeded()) {
         // 部署成功后2秒后卸载VerticleA

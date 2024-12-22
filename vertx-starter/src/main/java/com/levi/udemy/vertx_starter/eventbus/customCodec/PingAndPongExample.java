@@ -4,6 +4,10 @@ import io.vertx.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+/**
+ * vertx通过事件总线进行通信，如果要传递自定义对象，则需要注册对应的codec，否则会报错
+ */
 public class PingAndPongExample {
 
   final static Logger logger = LoggerFactory.getLogger(PingAndPongExample.class);

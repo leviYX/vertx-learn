@@ -6,6 +6,9 @@ import io.vertx.core.Vertx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 点对点消息传递示例
+ */
 public class Point2PointExamle {
 
 

@@ -19,6 +19,7 @@ public class WorkerExecBlockExample extends AbstractVerticle {
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
     startPromise.complete();
+    // Vert.x框架提供了一个executeBlocking方法，该方法允许我们在Vert.x的事件循环线程之外执行阻塞代码。
     vertx.executeBlocking(event ->{
       blockingCode();
       // 异步任务执行完毕，通知Vert.x框架，触发回调函数，也就是下面挂的回调函数

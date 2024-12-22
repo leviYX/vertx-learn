@@ -2,11 +2,13 @@ package com.levi.udemy.vertx_starter.eventbus;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
-import io.vertx.core.Verticle;
 import io.vertx.core.Vertx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 请求响应消息模式
+ */
 public class RequestResponseExamle{
 
   public static final String ADDRESS = "my.request.response";

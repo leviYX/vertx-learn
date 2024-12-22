@@ -15,6 +15,8 @@ public class WorkerExecWorkerExample extends AbstractVerticle {
   public static void main(String[] args) {
     var vertx = Vertx.vertx();
     vertx.deployVerticle(new WorkerExecWorkerExample(),
+      // 这个DeploymentOptions很重要，如果不设置，则默认在event loop线程中执行，会导致阻塞整个event loop
+      // 设置为worker verticle，则可以执行阻塞代码,并且可以设置worker的数量
       new DeploymentOptions().setWorker(true).setWorkerPoolName("my-worker-pool-"));
   }
 

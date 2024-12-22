@@ -14,11 +14,11 @@ public class EventLoopExample extends AbstractVerticle {
 
   public static void main(String[] args) {
     var vertx = Vertx.vertx(new VertxOptions()
-      .setMaxEventLoopExecuteTime(2)
-      .setMaxEventLoopExecuteTimeUnit(TimeUnit.SECONDS)
-      .setBlockedThreadCheckInterval(1)
-      .setBlockedThreadCheckIntervalUnit(TimeUnit.SECONDS)
-      .setEventLoopPoolSize(2));
+      .setMaxEventLoopExecuteTime(2) // event loop执行时间限制
+      .setMaxEventLoopExecuteTimeUnit(TimeUnit.SECONDS) // 时间单位
+      .setBlockedThreadCheckInterval(1) // 检查阻塞线程的间隔时间
+      .setBlockedThreadCheckIntervalUnit(TimeUnit.SECONDS) // 时间单位
+      .setEventLoopPoolSize(2)); // 事件循环池大小
 
     vertx.deployVerticle(EventLoopExample.class.getName(),new DeploymentOptions().setInstances(4));
   }
