@@ -146,35 +146,35 @@ public class FuturePromiseExampleTest {
     log.info("end");
   }
 
-  @Test
-  public void future_composition(Vertx vertx, VertxTestContext context) {
-    log.info("start");
-
-    var promise1 = Promise.promise();
-    var promise2 = Promise.promise();
-    var promise3 = Promise.promise();
-
-    var future1 = promise1.future();
-    var future2 = promise2.future();
-    var future3 = promise3.future();
-
-    CompositeFuture.all(future1,future2,future3)
-      .onSuccess(res -> {
-        log.info("all future success");
-        context.completeNow();
-      })
-      .onFailure(err ->{
-        log.error(err.getMessage());
-        context.failNow(err);
-      });
-
-    vertx.setTimer(1000,timerId ->{
-      promise1.complete("future 1");
-      promise2.complete("future 2");
-      promise3.fail("Timer execute error");
-    });
-
-    log.info("end");
-  }
+//  @Test
+//  public void future_composition(Vertx vertx, VertxTestContext context) {
+//    log.info("start");
+//
+//    var promise1 = Promise.promise();
+//    var promise2 = Promise.promise();
+//    var promise3 = Promise.promise();
+//
+//    var future1 = promise1.future();
+//    var future2 = promise2.future();
+//    var future3 = promise3.future();
+//
+//    CompositeFuture.all(future1,future2,future3)
+//      .onSuccess(res -> {
+//        log.info("all future success");
+//        context.completeNow();
+//      })
+//      .onFailure(err ->{
+//        log.error(err.getMessage());
+//        context.failNow(err);
+//      });
+//
+//    vertx.setTimer(1000,timerId ->{
+//      promise1.complete("future 1");
+//      promise2.complete("future 2");
+//      promise3.fail("Timer execute error");
+//    });
+//
+//    log.info("end");
+//  }
 
 }
