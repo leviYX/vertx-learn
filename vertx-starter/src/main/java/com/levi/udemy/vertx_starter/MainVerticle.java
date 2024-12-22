@@ -35,6 +35,7 @@ public class MainVerticle extends AbstractVerticle {
   // 处理一些资源的关闭等工作
   @Override
   public void stop(Promise<Void> stopPromise) throws Exception {
+    System.out.println("Stopping Vert.x");
     super.stop(stopPromise);
   }
 }
