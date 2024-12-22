@@ -1,0 +1,9 @@
+vertx中有很多异步回调，但是异步回调如果调用链路很长的时候会产生回调地狱。所以vertx中提供了future和promise来解决异步回调的任务编排问题。
+首先异步模型下 future和promise是不一样的，这个要区分开。只不过java中实现的CompletableFuture中把future和promise放在一起实现了。
+这里我们来区分一下这二者在模型中有何区别。
+
+future:future异步回调的结果，用于读取结果，也就是一个读操作。
+
+promise:promise是异步的写操作，用于异步的完成(完成就是一种写，修改状态为完成)，写入成功，写入失败等等。
+
+

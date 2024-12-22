@@ -1,8 +1,6 @@
 package com.levi.udemy.vertx_starter.eventbus.customCodec;
 
-import com.levi.udemy.vertx_starter.eventbus.Point2PointExamle;
 import io.vertx.core.*;
-import io.vertx.core.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
