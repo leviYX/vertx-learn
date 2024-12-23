@@ -2,6 +2,7 @@ package com.levi.vertx_stock_broker;
 
 import com.github.javafaker.Faker;
 import com.levi.vertx_stock_broker.assets.AssetsRestApi;
+import com.levi.vertx_stock_broker.quotes.QuotesRestApi;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
@@ -36,7 +37,9 @@ public class MainVerticle extends AbstractVerticle {
   public void start(Promise<Void> startPromise) throws Exception {
     var restApi = Router.router(vertx);
     restApi.route().failureHandler(failureHandler());
+    // 绑定两个路由API信息
     AssetsRestApi.attach(restApi);
+    QuotesRestApi.attach(restApi);
     vertx.createHttpServer()
       .requestHandler(restApi)
       .exceptionHandler(err -> LOG.error("Vertx exception", err))
