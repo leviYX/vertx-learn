@@ -1,5 +1,6 @@
 package com.levi.vertx_stock_broker;
 
+import com.levi.vertx_stock_broker.constant.ConfigConstant;
 import io.vertx.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +9,10 @@ public class MainVerticle extends AbstractVerticle {
 
   private static final Logger LOG = LoggerFactory.getLogger(MainVerticle.class);
 
+
   public static void main(String[] args) {
+    System.setProperty(ConfigConstant.SERVER_PORT,"9999");
+
     var vertx = Vertx.vertx();
     vertx.exceptionHandler(err -> LOG.error("Vertx exception", err));
     vertx.deployVerticle(new MainVerticle())
@@ -27,7 +31,7 @@ public class MainVerticle extends AbstractVerticle {
   }
 
   private static int getProcessorNumber() {
-    return Math.max(1,Runtime.getRuntime().availableProcessors());
+    return Math.min(1,Runtime.getRuntime().availableProcessors());
   }
 }
 

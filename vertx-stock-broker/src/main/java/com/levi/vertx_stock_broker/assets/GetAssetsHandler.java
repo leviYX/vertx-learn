@@ -2,6 +2,7 @@ package com.levi.vertx_stock_broker.assets;
 
 import io.netty.handler.codec.http.HttpHeaderValues;
 import io.vertx.core.Handler;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpHeaders;
 import io.vertx.core.json.JsonArray;
 import io.vertx.ext.web.RoutingContext;
@@ -19,14 +20,15 @@ public class GetAssetsHandler implements Handler<RoutingContext> {
 
   @Override
   public void handle(RoutingContext context) {
-    var response = new JsonArray();
+    JsonArray response = new JsonArray();
     assets.forEach(response::add);
-    LOG.info("Attached assets API response: {}", response.encode());
+    LOG.info("Attached assets API response: {}", response);
 
+    Buffer buffer = response.toBuffer();
     context.response()
       .putHeader(HttpHeaders.CONTENT_TYPE, HttpHeaderValues.APPLICATION_JSON)
       .putHeader("myheader", "myheadervalue")
-      .end(response.toBuffer());
+      .end(buffer);
   }
 
 }

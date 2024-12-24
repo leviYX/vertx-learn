@@ -1,6 +1,8 @@
 package com.levi.vertx_stock_broker;
 
 import com.levi.vertx_stock_broker.assets.AssetsRestApi;
+import com.levi.vertx_stock_broker.config.BrokerConfig;
+import com.levi.vertx_stock_broker.config.ConfigLoader;
 import com.levi.vertx_stock_broker.quotes.QuotesRestApi;
 import com.levi.vertx_stock_broker.watchList.WatchListRestApi;
 import io.vertx.core.AbstractVerticle;
@@ -19,6 +21,16 @@ public class RestApiVerticle extends AbstractVerticle {
 
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
+    // 加载配置
+    ConfigLoader.load(vertx)
+      .onFailure(startPromise::fail)
+      .onSuccess(config -> {
+        startHttpServer(startPromise,config);
+      });
+  }
+
+  private void startHttpServer(Promise<Void> startPromise, BrokerConfig config) {
+    LOG.info("this app yaml version is {}",config.getVersion());
     var restApi = Router.router(vertx);
     restApi.route().handler(BodyHandler.create()).failureHandler(failureHandler());
     // 绑定多个路由API信息
@@ -28,10 +40,10 @@ public class RestApiVerticle extends AbstractVerticle {
     vertx.createHttpServer()
       .requestHandler(restApi)
       .exceptionHandler(err -> LOG.error("Vertx exception", err))
-      .listen(8888).onComplete(http -> {
+      .listen(config.getServerPort()).onComplete(http -> {
         if (http.succeeded()) {
           startPromise.complete();
-          LOG.info("HTTP server started on port 8888");
+          LOG.info("HTTP server started on port {}", config.getServerPort());
         } else {
           startPromise.fail(http.cause());
         }
