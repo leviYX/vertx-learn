@@ -1,15 +1,10 @@
 package com.levi.ws;
 
-import com.github.javafaker.Faker;
-import com.levi.ws.factory.InstanceFactory;
-import io.vertx.core.Vertx;
+import com.levi.ws.group.GroupDomin;
 import io.vertx.core.http.ServerWebSocket;
-import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-import java.time.Duration;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,21 +14,17 @@ public class PriceBroadcast {
 
     private static final Map<String, ServerWebSocket> connectionClients = new ConcurrentHashMap<>();
 
-    public PriceBroadcast(Vertx vertx) {
-        periodicUpdate(vertx);
+    private GroupDomin groupDomin;
+
+    public PriceBroadcast(GroupDomin groupDomin) {
+        this.groupDomin = groupDomin;
     }
 
-    private void periodicUpdate(Vertx vertx) {
-        Faker faker = InstanceFactory.faker();
-        String updatePrice = new JsonObject()
-                .put("email", faker.internet().emailAddress())
-                .put("price", faker.random().nextDouble())
-                .toString();
-        vertx.setPeriodic(Duration.ofSeconds(1).toMillis(), timerId -> {
-            connectionClients.values().forEach(ws -> {
-                LOG.info("send message to client:{}", ws.textHandlerID());
-                ws.writeTextMessage(updatePrice);
-            });
+    public void groupChat(String textHandlerID) {
+        connectionClients.values().forEach(ws -> {
+             if (!ws.textHandlerID().equals(textHandlerID)) {
+                 ws.writeTextMessage(textHandlerID);
+            }
         });
     }
 

@@ -1,6 +1,7 @@
 package com.levi.ws.handler;
 
 import com.levi.ws.PriceBroadcast;
+import com.levi.ws.group.GroupDomin;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.ServerWebSocket;
@@ -19,8 +20,11 @@ public class WebSocketHandler implements Handler<ServerWebSocket> {
 
     private PriceBroadcast priceBroadcast;
 
-    public WebSocketHandler(Vertx vertx) {
-        this.priceBroadcast = new PriceBroadcast(vertx);
+    public WebSocketHandler() {
+        GroupDomin groupDomin = new GroupDomin();
+        groupDomin.setId("1");
+        groupDomin.setName("fen-bang");
+        this.priceBroadcast = new PriceBroadcast(groupDomin);
     }
 
     @Override
@@ -45,7 +49,7 @@ public class WebSocketHandler implements Handler<ServerWebSocket> {
         priceBroadcast.register(ws);
     }
 
-    private static Handler<WebSocketFrame> webSocketFrameHandler(ServerWebSocket ws) {
+    private Handler<WebSocketFrame> webSocketFrameHandler(ServerWebSocket ws) {
         String textHandlerID = ws.textHandlerID();
         return buffer -> {
             String msg = buffer.textData();
@@ -54,6 +58,7 @@ public class WebSocketHandler implements Handler<ServerWebSocket> {
                 ws.writeFinalTextFrame("WebSocket  " + textHandlerID + " closed");
                 ws.close();
             } else {
+                priceBroadcast.groupChat(textHandlerID);
                 LOG.info("WebSocket {} received message: {}", textHandlerID, msg);
                 ws.writeTextMessage("WebSocket " + textHandlerID + " received message: " + msg);
             }

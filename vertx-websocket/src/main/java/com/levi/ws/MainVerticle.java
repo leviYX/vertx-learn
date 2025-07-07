@@ -18,7 +18,8 @@ public class MainVerticle extends AbstractVerticle {
 
     @Override
     public void start(Promise<Void> startPromise) throws Exception {
-        vertx.createHttpServer().webSocketHandler(new WebSocketHandler(vertx))
+        vertx.createHttpServer()
+                .webSocketHandler(new WebSocketHandler())
                 .listen(8080, result -> {
                     if (result.succeeded()) {
                         LOG.info("HTTP server started on port 8080");
