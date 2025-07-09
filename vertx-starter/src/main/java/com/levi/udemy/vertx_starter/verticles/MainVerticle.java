@@ -39,10 +39,10 @@ public class MainVerticle extends AbstractVerticle {
     // 获取部署的时候setConfig的配置信息
     var config = config();
     System.out.println(config.toString());
-    vertx.deployVerticle(new VerticleA(),deploy -> {
-      if(deploy.succeeded()) {
+    vertx.deployVerticle(new VerticleA(),whenDeploy -> {
+      if(whenDeploy.succeeded()) {
         // 部署成功后2秒后卸载VerticleA
-        vertx.setTimer(2000,id-> vertx.undeploy(deploy.result()));
+        vertx.setTimer(2000,id-> vertx.undeploy(whenDeploy.result()));
       }
     });
     startPromise.complete();

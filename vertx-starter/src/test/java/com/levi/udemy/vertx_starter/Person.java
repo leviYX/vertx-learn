@@ -5,6 +5,10 @@ public class Person {
   private String name;
   private boolean lovesVertx;
 
+  // 反序列化需要默认构造
+  public Person() {
+  }
+
   public Person(Integer id, String name, boolean lovesVertx) {
     this.id = id;
     this.name = name;
