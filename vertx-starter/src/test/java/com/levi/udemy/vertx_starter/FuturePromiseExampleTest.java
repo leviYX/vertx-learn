@@ -102,6 +102,7 @@ public class FuturePromiseExampleTest {
       log.info("Timer done");
     });
     Future<String> future = promise.future();
+    // map可以用来把一种类型转为另一种类型
     future
       .map(resultStr ->{
         log.info("map string to jsonObject");
@@ -119,6 +120,14 @@ public class FuturePromiseExampleTest {
       .onFailure(testContext::failNow);
   }
 
+  /**
+   * 协调多个任务，future的compose方法可以用来协调多个任务，
+   * 第一个任务完成之后，会触发第二个任务，第二个任务完成之后，会触发第三个任务，
+   * 以此类推，直到所有任务完成，或者有一个任务失败，
+   * 此时会触发onFailure回调，并且不会触发后续的任务
+   * @param vertx
+   * @param testContext
+   */
   @Test
   public void future_coordination(Vertx vertx, VertxTestContext testContext) {
     log.info("start");
@@ -146,35 +155,35 @@ public class FuturePromiseExampleTest {
     log.info("end");
   }
 
-//  @Test
-//  public void future_composition(Vertx vertx, VertxTestContext context) {
-//    log.info("start");
-//
-//    var promise1 = Promise.promise();
-//    var promise2 = Promise.promise();
-//    var promise3 = Promise.promise();
-//
-//    var future1 = promise1.future();
-//    var future2 = promise2.future();
-//    var future3 = promise3.future();
-//
-//    CompositeFuture.all(future1,future2,future3)
-//      .onSuccess(res -> {
-//        log.info("all future success");
-//        context.completeNow();
-//      })
-//      .onFailure(err ->{
-//        log.error(err.getMessage());
-//        context.failNow(err);
-//      });
-//
-//    vertx.setTimer(1000,timerId ->{
-//      promise1.complete("future 1");
-//      promise2.complete("future 2");
-//      promise3.fail("Timer execute error");
-//    });
-//
-//    log.info("end");
-//  }
+  @Test
+  public void future_composition(Vertx vertx, VertxTestContext context) {
+    log.info("start");
+
+    var promise1 = Promise.promise();
+    var promise2 = Promise.promise();
+    var promise3 = Promise.promise();
+
+    var future1 = promise1.future();
+    var future2 = promise2.future();
+    var future3 = promise3.future();
+
+    CompositeFuture.all(future1,future2,future3)
+      .onSuccess(res -> {
+        log.info("all future success");
+        context.completeNow();
+      })
+      .onFailure(err ->{
+        log.error(err.getMessage());
+        context.failNow(err);
+      });
+
+    vertx.setTimer(1000,timerId ->{
+      promise1.complete("future 1");
+      promise2.complete("future 2");
+      promise3.fail("Timer execute error");
+    });
+
+    log.info("end");
+  }
 
 }
