@@ -33,7 +33,7 @@ public class RestApiVerticle extends AbstractVerticle {
     LOG.info("this app yaml version is {}",config.getVersion());
     var restApi = Router.router(vertx);
     restApi.route().handler(BodyHandler.create()).failureHandler(failureHandler());
-    // 绑定多个路由API信息
+    // 绑定多个路由API信息, 可以通过路由前缀来区分不同的API信息, attach内部会处理不同的前缀请求，并将其绑定到不同的API信息中
     AssetsRestApi.attach(restApi);
     QuotesRestApi.attach(restApi);
     WatchListRestApi.attach(restApi);
