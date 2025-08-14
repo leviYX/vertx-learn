@@ -15,14 +15,16 @@ public class MainVerticle extends AbstractVerticle {
 
     var vertx = Vertx.vertx();
     vertx.exceptionHandler(err -> LOG.error("Vertx exception", err));
-    vertx.deployVerticle(new MainVerticle())
+    vertx
+      .deployVerticle(new MainVerticle())
       .onFailure(err -> LOG.error("Vertx deployment failed", err))
       .onSuccess(id -> LOG.info("Vertx deployment successful: {}", id));
   }
 
   @Override
   public void start(Promise<Void> startPromise){
-    vertx.deployVerticle(RestApiVerticle.class.getName(),new DeploymentOptions().setInstances(getProcessorNumber()))
+    vertx.deployVerticle(RestApiVerticle.class.getName(),
+        new DeploymentOptions().setInstances(getProcessorNumber()))
       .onFailure(startPromise::fail)
       .onSuccess(res -> {
         LOG.info("deployment {} succeeded with id {}", RestApiVerticle.class.getSimpleName(),res);

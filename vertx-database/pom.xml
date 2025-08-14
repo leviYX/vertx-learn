@@ -25,5 +25,19 @@
             <artifactId>vertx-pg-client</artifactId>
             <version>4.4.0</version>
         </dependency>
+
+        <!-- MySQL -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
+
+        <!-- HTTP 客户端，可用 OkHttp / Apache HttpClient -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+        </dependency>
     </dependencies>
 </project>
