@@ -9,8 +9,8 @@ import java.util.stream.IntStream;
 public class LocalBatchWrite {
 
     private static final int TOTAL   = 50_000;
-    private static final int BATCH   = 100;
-    private static final int THREADS = 500;
+    private static final int BATCH   = 1000;
+    private static final int THREADS = 50;
     private static final int THREAD_POOL_QUEUE = 10_000;
 
     private static final String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/springai?useSSL=false&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true";
