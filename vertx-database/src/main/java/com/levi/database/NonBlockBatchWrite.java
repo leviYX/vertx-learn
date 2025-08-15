@@ -60,14 +60,14 @@ public class NonBlockBatchWrite extends AbstractVerticle {
     }
 
     private Future<Void> writeBatch(List<Record> batch) {
-        StringBuilder sql = new StringBuilder("INSERT INTO t_demo (id, payload) VALUES ");
-        sql.append(batch.stream()
+        StringBuilder sqlContext = new StringBuilder("INSERT INTO t_demo (id, payload) VALUES ");
+        sqlContext.append(batch.stream()
                 .map(r -> "(?, ?)")
                 .collect(Collectors.joining(",")));
 
         Tuple params = Tuple.tuple();
         batch.forEach(r -> params.addInteger(r.id).addString(r.payload));
-        return pool.preparedQuery(sql.toString())
+        return pool.preparedQuery(sqlContext.toString())
                 .execute(params)
                 .onSuccess(result -> {
                     System.out.println("写入成功，耗时" + (System.currentTimeMillis() - Start) + "ms");
