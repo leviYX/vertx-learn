@@ -10,28 +10,37 @@ import java.util.stream.IntStream;
 
 public class NonBlockBatchWrite extends AbstractVerticle {
 
-    private static final int TOTAL   = 50_000;
-    private static final int BATCH   = 1000;
+    private static final int TOTAL = 50_000;
+    private static final int BATCH = 7_000;
+    private static long Start;
 
     private MySQLPool pool;
 
     @Override
     public void start(Promise<Void> startPromise) {
-        pool = MySQLPool.pool(vertx, new MySQLConnectOptions()
-                        .setHost("127.0.0.1")
-                        .setPort(3306)
-                        .setDatabase("springai")
-                        .setUser("root")
-                        .setPassword("root")
-                        .addProperty("rewriteBatchedStatements", "true")
-                        .setCachePreparedStatements(true),
-                new PoolOptions().setMaxSize(64));
+        Start = System.currentTimeMillis();
+        MySQLConnectOptions connectOptions = new MySQLConnectOptions()
+                .setHost("127.0.0.1")
+                .setPort(3306)
+                .setDatabase("springai")
+                .setUser("root")
+                .setPassword("root")
+                .addProperty("useSSL", "false")
+                .addProperty("allowPublicKeyRetrieval", "true")
+                .addProperty("rewriteBatchedStatements", "true")
+                .addProperty("useServerPrepStmts", "false");
 
-        pool.query("CREATE TABLE IF NOT EXISTS t_demo (id INT PRIMARY KEY, payload VARCHAR(200))")
-                .execute()
-                .onFailure(Throwable::printStackTrace)
-                .compose(r -> doInsert())
-                .onComplete(startPromise);
+        PoolOptions poolOptions = new PoolOptions()
+                .setMaxSize(50)
+                .setMaxWaitQueueSize(10_000);
+        pool = MySQLPool.pool(vertx, connectOptions, poolOptions);
+
+        long start = System.currentTimeMillis();
+        doInsert().onSuccess(insertResult -> {
+            long end = System.currentTimeMillis();
+            System.out.println("全部写入完成, 耗时 " + (end - start) + " ms");
+            startPromise.complete();
+        });
     }
 
     private Future<Void> doInsert() {
@@ -41,23 +50,30 @@ public class NonBlockBatchWrite extends AbstractVerticle {
 
         List<List<Record>> batches = split(records, BATCH);
 
+        WorkerExecutor worker = vertx.createSharedWorkerExecutor("batch-pool", 50);
+
         List<Future> futures = batches.stream()
-                .map(this::writeBatch)
+                .map(batch -> worker.executeBlocking(promise -> writeBatch(batch), false))
                 .collect(Collectors.toList());
 
         return CompositeFuture.all(new ArrayList<>(futures)).mapEmpty();
     }
 
     private Future<Void> writeBatch(List<Record> batch) {
-        List<Tuple> params = batch.stream()
-                .map(r -> Tuple.of(r.id, r.payload))
-                .collect(Collectors.toList());
+        StringBuilder sql = new StringBuilder("INSERT INTO t_demo (id, payload) VALUES ");
+        sql.append(batch.stream()
+                .map(r -> "(?, ?)")
+                .collect(Collectors.joining(",")));
 
-        return pool.preparedQuery("INSERT INTO t_demo (id, payload) VALUES (?, ?)")
-                .executeBatch(params)
+        Tuple params = Tuple.tuple();
+        batch.forEach(r -> params.addInteger(r.id).addString(r.payload));
+        return pool.preparedQuery(sql.toString())
+                .execute(params)
+                .onSuccess(result -> {
+                    System.out.println("写入成功，耗时" + (System.currentTimeMillis() - Start) + "ms");
+                })
                 .mapEmpty();
     }
-
     private static <T> List<List<T>> split(List<T> src, int size) {
         List<List<T>> list = new ArrayList<>();
         for (int i = 0; i < src.size(); i += size) {
@@ -67,7 +83,8 @@ public class NonBlockBatchWrite extends AbstractVerticle {
     }
 
     private static class Record {
-        final int id; final String payload;
+        final int id;
+        final String payload;
         Record(int id, String payload) { this.id = id; this.payload = payload; }
     }
 
@@ -78,4 +95,5 @@ public class NonBlockBatchWrite extends AbstractVerticle {
                 .onSuccess(id -> System.out.println("verticle部署完毕，一共耗时: " + (System.currentTimeMillis() - start)))
                 .onFailure(Throwable::printStackTrace);
     }
+
 }
