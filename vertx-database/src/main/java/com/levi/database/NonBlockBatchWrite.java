@@ -74,6 +74,7 @@ public class NonBlockBatchWrite extends AbstractVerticle {
                 })
                 .mapEmpty();
     }
+
     private static <T> List<List<T>> split(List<T> src, int size) {
         List<List<T>> list = new ArrayList<>();
         for (int i = 0; i < src.size(); i += size) {
