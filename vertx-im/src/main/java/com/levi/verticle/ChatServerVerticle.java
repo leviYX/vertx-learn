@@ -1,4 +1,4 @@
-package com.levi;
+package com.levi.verticle;
 
 import com.levi.domin.Message;
 import com.levi.service.AuthService;
