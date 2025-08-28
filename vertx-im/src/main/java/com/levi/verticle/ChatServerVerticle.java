@@ -21,7 +21,6 @@ public class ChatServerVerticle extends AbstractVerticle {
 
     private final AuthService authService;
     private final UserManager userManager = new UserManager();
-
     public ChatServerVerticle(AuthService authService) {
         this.authService = authService;
     }
@@ -105,7 +104,9 @@ public class ChatServerVerticle extends AbstractVerticle {
 
         if (userManager.isUserOnline(to)) {
             NetSocket targetSocket = userManager.getUserSocket(to);
-            targetSocket.write(message.toJson().encode());
+            if (targetSocket != null) {
+                targetSocket.write(message.toJson().encode());
+            }
         } else {
             socket.write(new JsonObject().put("status", "error").put("message", "User offline").encode());
         }
