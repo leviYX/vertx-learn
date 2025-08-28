@@ -4,9 +4,6 @@ import com.levi.domin.User;
 import io.vertx.core.net.NetSocket;
 import java.util.concurrent.ConcurrentHashMap;
 
-
-import java.util.Set;
-
 public class UserManager {
     // username -> User
     private final ConcurrentHashMap<String, User> onlineUsers = new ConcurrentHashMap<>();
@@ -26,11 +23,6 @@ public class UserManager {
 
     public boolean isUserOnline(String username) {
         return onlineUsers.containsKey(username);
-    }
-
-    // 调试用：列出在线用户
-    public Set<String> getOnlineUsers() {
-        return onlineUsers.keySet();
     }
 
     public ConcurrentHashMap<String, User> getOnlineUsersSet() {
