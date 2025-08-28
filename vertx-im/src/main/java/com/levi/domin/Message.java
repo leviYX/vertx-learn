@@ -34,7 +34,7 @@ public class Message {
                 .put("timestamp", timestamp);
     }
 
-    public static Message fromJson(JsonObject json) {
+    public Message fromJson(JsonObject json) {
         Type type = Type.valueOf(json.getString("type"));
         String from = json.getString("from");
         String to = json.getString("to");
