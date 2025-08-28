@@ -8,6 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="vertx-websocket" />
+        <module name="vertx-im" />
         <module name="vertx-stock-broker" />
         <module name="vertx-mutiny" />
         <module name="vertx-database" />
