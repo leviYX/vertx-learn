@@ -3,6 +3,9 @@ package com.levi.domin;
 import io.vertx.core.json.JsonObject;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 @Data
 public class Message {
 
@@ -21,7 +24,7 @@ public class Message {
         this.to = to;
         this.content = content;
         this.fileName = fileName;
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = LocalDateTime.now().toInstant(ZoneOffset.of("+8")).toEpochMilli();
     }
 
     public JsonObject toJson() {
