@@ -31,16 +31,16 @@ public class ChatServerVerticle extends AbstractVerticle {
         NetServer server = vertx.createNetServer(new NetServerOptions().setReceiveBufferSize(NET_SERVER_MAX_BUFFER_SIZE));
         server.connectHandler(socket -> {
             // 登录后的用户名
-            final String[] holder = new String[1];
+            final var holder = new String[1];
             socket.handler(buf -> {
-                JsonObject msg = new JsonObject(buf.toString());
+                var msg = new JsonObject(buf.toString());
                 // 登录 or 聊天
-                String action = msg.getString("action");
+                var action = msg.getString("action");
                 if (LOGIN_ACTION.equals(action)) {
                     handleLogin(socket, msg);
                 } else if (CHAT_ACTION.equals(action)) {
                     // 登录之外任何消息都必须带 token，先鉴权
-                    String token = msg.getString("token");
+                    var token = msg.getString("token");
                     authService.authenticate(token)
                             .onSuccess(username -> {
                                 holder[0] = username;
