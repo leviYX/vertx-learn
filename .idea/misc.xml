@@ -18,6 +18,7 @@
         <option value="$PROJECT_DIR$/vertx-starter/pom.xml" />
         <option value="$PROJECT_DIR$/vertx-mutiny/pom.xml" />
         <option value="$PROJECT_DIR$/vertx-im/pom.xml" />
+        <option value="$PROJECT_DIR$/vertx-demo/pom.xml" />
       </list>
     </option>
   </component>
