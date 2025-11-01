@@ -7,12 +7,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="vertx-websocket" />
-        <module name="vertx-im" />
-        <module name="vertx-stock-broker" />
-        <module name="vertx-mutiny" />
         <module name="vertx-database" />
         <module name="vertx-starter" />
+        <module name="vertx-websocket" />
+        <module name="vertx-im" />
+        <module name="vertx-demo" />
+        <module name="vertx-stock-broker" />
+        <module name="vertx-mutiny" />
       </profile>
     </annotationProcessing>
   </component>

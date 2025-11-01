@@ -1,0 +1,14 @@
+<configuration>  <!-- <1>  -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%level [%thread] %logger{0} - %msg%n</pattern>  <!-- <2>  -->
+        </encoder>
+    </appender>
+
+    <logger name="io.netty" level="warn"/>  <!-- <3>  -->
+
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
